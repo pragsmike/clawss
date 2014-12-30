@@ -78,6 +78,7 @@
 (defn secure-message
   [message]
   (-> message
+      (soap/->soap)
       (add-message-id!)
       (add-security-header!)
       (add-saml-assertion! (saml/get-saml-props "some.type" "joe"))

@@ -9,7 +9,7 @@
 		<xwss:CanonicalizationMethod algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
 			disableInclusivePrefix="true" />
 		<xwss:SignatureMethod algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-		<xwss:SignatureTarget type="qname" value="{http://schemas.xmlsoap.org/soap/envelope/}Body">
+		<xwss:SignatureTarget type="qname" value="{http://www.w3.org/2003/05/soap-envelope}Body">
 			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
 			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
 				disableInclusivePrefix="true" />
