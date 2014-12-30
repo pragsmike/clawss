@@ -93,7 +93,6 @@
 (def app
   (-> api-routes
       (rp/wrap-proxy get-remote-uri-base http-opts)
-      (wrap-diag-routes)
       (with-client-middleware client-middleware)
       (middleware/wrap-exception-logging)
       (middleware/log-request)

@@ -7,6 +7,15 @@
             [clawss.saml :as saml])
   (:import (org.joda.time DateTime)))
 
+(def saml-props {:id "d2"
+                 :authn-instant "2011-12-05T17:55:45.199Z"
+                 :issue-instant "2011-12-05T17:55:45.199Z"
+                 :not-before "2011-12-05T16:56:07.438Z"
+                 :not-on-or-after "2011-12-05T18:56:07.438Z"
+                 :nameid-format "urn:some.id.format"
+                 :nameid "joe"
+                 })
+
 (fact "get-saml-props"
       (saml/get-saml-props "some.type" "joe" "some.uuid" (DateTime. 0))
       => {:nameid-format "some.type"
