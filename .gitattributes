@@ -1,0 +1,7 @@
+*.clj eol=lf
+NOTES eol=lf
+*.selmer eol=lf
+*.md eol=lf
+*.xml eol=lf
+*.iml eolf=lf
+*.wsdl eolf=lf

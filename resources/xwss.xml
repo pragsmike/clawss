@@ -1,0 +1,29 @@
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config"
+	dumpMessages="false">
+	<xwss:Sign includeTimestamp="true">
+		<!-- Following configuration allows client to sign SOAP request messages. Similar configuration is
+			required on server to process received SOAP requests. Prior to enabling client signing i.e. uncommenting
+			following configuration verify server security configuration -->
+
+		<xwss:X509Token certificateAlias="1" />
+		<xwss:CanonicalizationMethod algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
+			disableInclusivePrefix="true" />
+		<xwss:SignatureMethod algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+		<xwss:SignatureTarget type="qname" value="{http://schemas.xmlsoap.org/soap/envelope/}Body">
+			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
+				disableInclusivePrefix="true" />
+		</xwss:SignatureTarget>
+		<xwss:SignatureTarget type="qname" value="{urn:oasis:names:tc:SAML:2.0:assertion}Assertion">
+			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
+				disableInclusivePrefix="true" />
+		</xwss:SignatureTarget>
+		<xwss:SignatureTarget type="qname"
+			value="{http://schemas.xmlsoap.org/ws/2004/08/addressing}MessageID">
+			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"
+				disableInclusivePrefix="true" />
+		</xwss:SignatureTarget>
+	</xwss:Sign>
+</xwss:SecurityConfiguration>

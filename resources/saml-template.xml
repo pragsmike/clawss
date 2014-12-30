@@ -1,0 +1,17 @@
+<Assertion xmlns='urn:oasis:names:tc:SAML:2.0:assertion'
+                       ID='{{id}}' IssueInstant='{{issue-instant}}' Version='2.0'>
+  <Issuer Format='urn:unknown'/>
+  <Subject>
+    <SubjectConfirmation
+        Method='urn:oasis:names:tc:SAML:2.0:cm:sender-vouches'>
+      <SubjectConfirmationData NotBefore='{{not-before}}'
+                               NotOnOrAfter='{{not-on-or-after}}'/>
+    </SubjectConfirmation>
+    <NameID Format='{{nameid-format}}'>{{nameid}}</NameID>
+  </Subject>
+  <AuthnStatement AuthnInstant='{{authn-instant}}'>
+    <AuthnContext>
+      <AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unknown</AuthnContextClassRef>
+    </AuthnContext>
+  </AuthnStatement>
+</Assertion>
