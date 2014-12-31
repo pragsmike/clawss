@@ -1,5 +1,6 @@
 <xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config"
 	dumpMessages="false">
+        <xwss:Timestamp timeout="3600"/>
 	<xwss:Sign includeTimestamp="true">
 		<!-- Following configuration allows client to sign SOAP request messages. Similar configuration is
 			required on server to process received SOAP requests. Prior to enabling client signing i.e. uncommenting

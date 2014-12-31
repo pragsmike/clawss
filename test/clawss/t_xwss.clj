@@ -61,7 +61,7 @@
 
 (facts "secure-message"
        (let [nosec (soap/->soap (io/resource "sample-request.xml"))
-             withsec (xwss/secure-message nosec)]
+             withsec (xwss/secure-message nosec "joe" "some.type")]
          (has-header-element? withsec soap/NS-ADDRESSING "MessageID") => truthy
          (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => truthy
          (has-header-element? withsec xwss/NS-XMLDSIG "Signature") => truthy

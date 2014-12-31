@@ -76,12 +76,12 @@
   )
 
 (defn secure-message
-  [message]
+  [message subject-name subject-name-type]
   (-> message
       (soap/->soap)
       (add-message-id!)
       (add-security-header!)
-      (add-saml-assertion! (saml/get-saml-props "some.type" "joe"))
+      (add-saml-assertion! (saml/get-saml-props subject-name-type subject-name))
       (add-xml-signature!))
   )
 
@@ -89,4 +89,8 @@
   "Client (clj-http) middleware to add XML signature."
   [client]
   (fn [req]
-    (client (assoc req :body (secure-message (:body req))))))
+    (client (assoc req :body (secure-message
+                              (:body req)
+                              (or (:subject-name req) "")
+                              (or (:subject-name-type req) "")
+                              )))))
