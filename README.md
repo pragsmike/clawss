@@ -2,6 +2,15 @@
 
 Clojure wrapper for web-service security libraries.
 
+- [spring-ws wss4j](http://docs.spring.io/spring-ws/site/reference/html/security.html#security-xws-security-interceptor)
+- [XWSS Policy File doc](http://docs.oracle.com/cd/E17802_01/webservices/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887)
+
+## Future plans
+
+This package generates its own SAML Assertion.  However, [XWSS does generate SAML Assertions](http://docs.oracle.com/cd/E17802_01/webservices/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp580723)
+if specified in the policy.
+Look into letting XWSS do it.
+
 ## Standalone HTTP proxy
 
 The HTTP proxy listens for HTTP requests (not HTTPS!) on whatever port you specify.
