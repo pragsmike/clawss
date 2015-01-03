@@ -35,8 +35,11 @@
   ( [props] (add-saml-times props (DateTime.)))
   )
 
-(defn next-uuid []
-  (str "uuid:" (java.util.UUID/randomUUID)))
+(defn next-assertion-id
+  "An xs:ID, per http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf,
+   must start with a letter or underscore, and can only contain letters, digits, underscores, hyphens, and periods."
+  []
+  (str (java.util.UUID/randomUUID)))
 
 (defn get-saml-props
   "Use this when calling add-saml-assertion!.
@@ -44,7 +47,7 @@
    that, if used in an Assertion, would make it valid for the next ten minutes.
    If given assertion-id and DateTime argument, uses those literally instead of generating values."
   ([name-type name]
-     (get-saml-props name-type name (next-uuid) (DateTime.))
+     (get-saml-props name-type name (next-assertion-id) (DateTime.))
      )
   ([name-type name assertion-id now]
      (add-saml-times {
