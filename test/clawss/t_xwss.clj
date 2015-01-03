@@ -52,10 +52,10 @@
               saml (xp/$x:node "//*[local-name() = 'Assertion']" sechdr)]
           (.getNamespaceURI saml) => saml/NS-SAML
           (xp/$x:text "@ID" saml) => (:id t-saml/saml-props)
-          (xp/$x:text "@IssueInstant" saml) => "2011-12-05T17:55:45.199Z"
-          (xp/$x:text "//@NotBefore" saml) => "2011-12-05T16:56:07.438Z"
-          (xp/$x:text "//@NotOnOrAfter" saml) => "2011-12-05T18:56:07.438Z"
-          (xp/$x:text "//@AuthnInstant" saml) => "2011-12-05T17:55:45.199Z"
+          (xp/$x:text "@IssueInstant" saml) => "2011-12-05T17:55:45Z"
+          (xp/$x:text "//@NotBefore" saml) => "2011-12-05T16:56:07Z"
+          (xp/$x:text "//@NotOnOrAfter" saml) => "2011-12-05T18:56:07Z"
+          (xp/$x:text "//@AuthnInstant" saml) => "2011-12-05T17:55:45Z"
           (xp/$x:text "//*[local-name()='Subject']//@Format" saml) => "urn:some.id.format"
           (xp/$x:text "*/*[local-name()='NameID']" saml) => "joe")))
 
