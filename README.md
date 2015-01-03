@@ -48,3 +48,7 @@ In ~/.lein/profiles.clj do something like this:
 ```
 
 
+# References:
+
+- [Java XML Digital Signature](http://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/XMLDigitalSignature.html)
+- [JAX-WS 2.1.1](https://jax-ws.java.net/nonav/2.1.1/docs/UsersGuide.html)

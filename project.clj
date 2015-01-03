@@ -15,7 +15,7 @@
                                javax.xml.crypto/xmldsig]]
                  [xerces/xercesImpl "2.9.1"]
 
-                 [saacl "0.1.0-SNAPSHOT"]
+                 [saacl "0.1.2-SNAPSHOT"]
                  [liberator "0.12.0"]
                  [compojure "1.1.8"]
                  [selmer "0.7.8" :exclusions [ commons-codec]]
