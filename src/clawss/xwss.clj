@@ -11,29 +11,48 @@
 (def NS-WSS-SECEXT "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")
 (def NS-XMLDSIG  "http://www.w3.org/2000/09/xmldsig#")
 
-(defn processor []
-  (def cbs (reify CallbackHandler
-             (handle [this callbacks]
-               (let [cb (aget callbacks 0)]
-                 (if (= (type cb) com.sun.xml.wss.impl.callback.SignatureKeyCallback)
-                   (let [req (.getRequest cb)
-                         alias (.getAlias req)
-                         keystore (creds/keystore)
-                         key-pass (:keystore-pass (creds/get-keystore-registry))]
-                     (.setPrivateKey req (.getKey keystore alias (char-array key-pass)))
-                     (.setX509Certificate req (.getCertificate keystore alias))
-                     )))
-               )
-             ))
-
+(defn create-processor []
   (. (com.sun.xml.wss.XWSSProcessorFactory/newInstance)
      createProcessorForSecurityConfiguration
      (io/input-stream (io/resource "xwss.xml"))
-     cbs))
+     (reify CallbackHandler
+       (handle [this callbacks]
+         (let [cb (aget callbacks 0)]
+           (when (= (type cb) com.sun.xml.wss.impl.callback.CertificateValidationCallback)
+             (.setValidator cb (reify com.sun.xml.wss.impl.callback.CertificateValidationCallback$CertificateValidator
+                                 (^boolean validate [this ^java.security.cert.X509Certificate certificate]  true)
+                                 )))
 
+           (if (= (type cb) com.sun.xml.wss.impl.callback.SignatureKeyCallback)
+             (let [req (.getRequest cb)
+                   alias (.getAlias req)
+                   keystore (creds/keystore)
+                   key-pass (:keystore-pass (creds/get-keystore-registry))]
+               (.setPrivateKey req (.getKey keystore alias (char-array key-pass)))
+               (.setX509Certificate req (.getCertificate keystore alias)))))))))
 
-(defn next-uuid []
-  (str "uuid:" (java.util.UUID/randomUUID)))
+(def processor* (delay (create-processor)))
+
+(defn processor [] @processor*)
+
+(defn strip-security-header!
+  "Removes the security header from the given SOAPMessage, mutating it in place.
+   Returns the mutated message, with the security header removed."
+  [message]
+  (let [message (soap/->soap message)]
+    (.detachNode (soap/get-header-element message clawss.xwss/NS-WSS-SECEXT "Security"))
+    message
+    )
+  )
+(defn verify-inbound-message
+  [message]
+  (let [processor (processor)
+        message (soap/->soap message)
+        context (. processor createProcessingContext message)]
+    #_(. processor verifyInboundMessage context)
+    (strip-security-header! message)
+    )
+  )
 
 (defn add-xml-signature!
   "Accepts an XML SOAP message in any format accepted by saacl.soap/->soap.
@@ -43,6 +62,9 @@
   (let [processor (processor)
         context (. processor createProcessingContext (soap/->soap message))]
     (. processor secureOutboundMessage context)))
+
+(defn next-uuid []
+  (str "uuid:" (java.util.UUID/randomUUID)))
 
 (defn add-message-id!
   "Accepts an XML document, either a string or a Document.
@@ -84,6 +106,7 @@
       (add-saml-assertion! (saml/get-saml-props subject-name-type subject-name))
       (add-xml-signature!))
   )
+
 
 (defn wrap-xmlsig
   "Client (clj-http) middleware to add XML signature."

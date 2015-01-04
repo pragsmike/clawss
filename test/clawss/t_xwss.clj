@@ -65,4 +65,8 @@
          (has-header-element? withsec soap/NS-ADDRESSING "MessageID") => truthy
          (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => truthy
          (has-header-element? withsec xwss/NS-XMLDSIG "Signature") => truthy
-         (has-header-element? withsec xwss/NS-WSS-UTILITY "Timestamp") => truthy))
+         (has-header-element? withsec xwss/NS-WSS-UTILITY "Timestamp") => truthy
+
+         (xwss/verify-inbound-message withsec)
+         (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => falsey
+         ))
