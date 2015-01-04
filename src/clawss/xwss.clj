@@ -55,16 +55,6 @@
         context (. processor createProcessingContext (soap/->soap message))]
     (. processor secureOutboundMessage context)))
 
-(defn strip-security-header!
-  "Removes the security header from the given SOAPMessage, mutating it in place.
-   Returns the mutated message, with the security header removed."
-  [message]
-  (let [message (soap/->soap message)]
-    (.detachNode (soap/get-header-element message clawss.xwss/NS-WSS-SECEXT "Security"))
-    message
-    )
-  )
-
 (defn next-uuid []
   (str "uuid:" (java.util.UUID/randomUUID)))
 
@@ -86,6 +76,17 @@
   (let [header (.getSOAPHeader message)]
     (.addHeaderElement header (QName. NS-WSS-SECEXT "Security"))
     message))
+
+(defn strip-security-header!
+  "Removes the security header from the given SOAPMessage, mutating it in place.
+   Returns the mutated message, with the security header removed."
+  [message]
+  (let [message (soap/->soap message)]
+    (when-let [hdr (soap/get-header-element message clawss.xwss/NS-WSS-SECEXT "Security")]
+      (.detachNode hdr))
+    message
+    )
+  )
 
 (defn add-saml-assertion!
   "Accepts a SOAPMessage.  Returns that same message, with a SAML

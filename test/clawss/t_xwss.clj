@@ -71,5 +71,16 @@
            (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => falsey)
          ))
 
+
 (fact "verify-soap-response! leaves SOAP Fault intact"
-      )
+      (def soap-fault  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">
+<env:Body>
+    <env:Fault>
+        <faultcode>env:Client</faultcode>
+        <faultstring>You did something wrong, but I can't tell you what for security reasons.  It's for your own good.</faultstring>
+    </env:Fault>
+</env:Body>
+</env:Envelope>")
+      (let [sf (xwss/verify-soap-response! (soap/->soap soap-fault))]
+          (xp/$x:text "*[local-name()='Fault']/faultcode" (.getSOAPBody sf)) => "env:Client"))
