@@ -99,7 +99,7 @@
   message
   )
 
-(defn secure-soap-request
+(defn secure-soap-request!
   [soap-request subject-name subject-name-type]
   (-> soap-request
       (soap/->soap)
@@ -109,7 +109,9 @@
       (secure-outbound-message!))
   )
 
-(defn verify-soap-response
+(defn verify-soap-response!
+  "Verifies the signature and other security markings on the SOAPMessage.
+  Strips them and returns the message without the security markings, mutated in place."
   [soap-response]
   (->  soap-response
        ;(verify-inbound-message)

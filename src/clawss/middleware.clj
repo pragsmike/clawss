@@ -13,14 +13,14 @@
   (fn [req]
     (let [resp (client req)]
       (assoc resp :body
-             (xwss/verify-soap-response
+             (xwss/verify-soap-response!
               (:body resp))))))
 
 (defn wrap-secure-request
   "Client (clj-http) middleware to add XML signature."
   [client]
   (fn [req]
-    (client (assoc req :body (xwss/secure-soap-request
+    (client (assoc req :body (xwss/secure-soap-request!
                               (:body req)
                               (or (:subject-name req) "")
                               (or (:subject-name-type req) ""))))))
