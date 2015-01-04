@@ -78,7 +78,8 @@
 (def client-middleware (concat client/default-middleware
                                [
                                 wrap-add-auth-headers
-                                middleware/wrap-xml-to-string
+                                middleware/wrap-request-body-to-string
+                                middleware/wrap-response-body-to-string
                                 ]))
 
 (defn with-client-middleware
