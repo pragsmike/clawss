@@ -11,16 +11,16 @@
 (defn has-header-element? [ doc ns tagname]
   (not (empty? (soap/get-header-elements doc ns tagname))))
 
-(facts "add-signature!"
-       (fact "Setup"
-             (xwss/processor) => truthy)
 
-       (fact "add-xml-signature!"
-             (let [nosig (soap/->soap (io/resource "sample-request-with-headers.xml"))
-                   withsig (xwss/add-xml-signature! nosig)
-                   ]
-               (has-header-element? withsig xwss/NS-XMLDSIG "Signature") => truthy
-               (has-header-element? withsig xwss/NS-WSS-UTILITY "Timestamp") => truthy)))
+(fact "XWSS Setup"
+      (xwss/processor) => truthy)
+
+(fact "secure-outbound-message!"
+      (let [nosig (soap/->soap (io/resource "sample-request-with-headers.xml"))
+            withsig (xwss/secure-outbound-message! nosig)
+            ]
+        (has-header-element? withsig xwss/NS-XMLDSIG "Signature") => truthy
+        (has-header-element? withsig xwss/NS-WSS-UTILITY "Timestamp") => truthy))
 
 (facts "add-message-id!"
        (fact "add-message-id! with existing soap Header element"
@@ -59,14 +59,14 @@
           (xp/$x:text "//*[local-name()='Subject']//@Format" saml) => "urn:some.id.format"
           (xp/$x:text "*/*[local-name()='NameID']" saml) => "joe")))
 
-(facts "secure-message"
+(facts "secure-soap-request"
        (let [nosec (soap/->soap (io/resource "sample-request.xml"))
-             withsec (xwss/secure-message nosec "joe" "some.type")]
+             withsec (xwss/secure-soap-request nosec "joe" "some.type")]
          (has-header-element? withsec soap/NS-ADDRESSING "MessageID") => truthy
          (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => truthy
          (has-header-element? withsec xwss/NS-XMLDSIG "Signature") => truthy
          (has-header-element? withsec xwss/NS-WSS-UTILITY "Timestamp") => truthy
 
-         (xwss/verify-inbound-message withsec)
-         (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => falsey
+         (let [verified (xwss/verify-soap-response withsec)]
+           (has-header-element? withsec xwss/NS-WSS-SECEXT "Security") => falsey)
          ))

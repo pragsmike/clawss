@@ -5,7 +5,7 @@
             [clawss.creds :as creds]
             [clawss.saml :as saml]
             [saacl.soap :as soap]
-            [saacl.xml :as xml]))
+            ))
 
 (def NS-WSS-UTILITY "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd")
 (def NS-WSS-SECEXT "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")
@@ -35,6 +35,26 @@
 
 (defn processor [] @processor*)
 
+
+(defn verify-inbound-message
+  "TODO: Test this with a SOAP Fault as input."
+  [message]
+  (let [processor (processor)
+        message (soap/->soap message)
+        context (. processor createProcessingContext message)]
+    #_(. processor verifyInboundMessage context)
+    )
+  )
+
+(defn secure-outbound-message!
+  "Accepts an XML SOAP message in any format accepted by saacl.soap/->soap.
+  Returns a javax.xml.soap.SOAPMessage that has the same content but with a signature added.
+  NOTE: If the input is already a SOAPMessage, it will be modified in place."
+  [message]
+  (let [processor (processor)
+        context (. processor createProcessingContext (soap/->soap message))]
+    (. processor secureOutboundMessage context)))
+
 (defn strip-security-header!
   "Removes the security header from the given SOAPMessage, mutating it in place.
    Returns the mutated message, with the security header removed."
@@ -44,24 +64,6 @@
     message
     )
   )
-(defn verify-inbound-message
-  [message]
-  (let [processor (processor)
-        message (soap/->soap message)
-        context (. processor createProcessingContext message)]
-    #_(. processor verifyInboundMessage context)
-    (strip-security-header! message)
-    )
-  )
-
-(defn add-xml-signature!
-  "Accepts an XML SOAP message in any format accepted by saacl.soap/->soap.
-  Returns a javax.xml.soap.SOAPMessage that has the same content but with a signature added.
-  NOTE: If the input is already a SOAPMessage, it will be modified in place."
-  [message]
-  (let [processor (processor)
-        context (. processor createProcessingContext (soap/->soap message))]
-    (. processor secureOutboundMessage context)))
 
 (defn next-uuid []
   (str "uuid:" (java.util.UUID/randomUUID)))
@@ -97,23 +99,18 @@
   message
   )
 
-(defn secure-message
-  [message subject-name subject-name-type]
-  (-> message
+(defn secure-soap-request
+  [soap-request subject-name subject-name-type]
+  (-> soap-request
       (soap/->soap)
       (add-message-id!)
       (add-security-header!)
       (add-saml-assertion! (saml/get-saml-props subject-name-type subject-name))
-      (add-xml-signature!))
+      (secure-outbound-message!))
   )
 
-
-(defn wrap-xmlsig
-  "Client (clj-http) middleware to add XML signature."
-  [client]
-  (fn [req]
-    (client (assoc req :body (secure-message
-                              (:body req)
-                              (or (:subject-name req) "")
-                              (or (:subject-name-type req) "")
-                              )))))
+(defn verify-soap-response
+  [soap-response]
+  (->  soap-response
+       ;(verify-inbound-message)
+       (strip-security-header!)))
