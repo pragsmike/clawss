@@ -22,12 +22,14 @@
    If given a second date-time argument, uses that as now; useful for testing."
   ( [props now]   (let [fmt (tf/formatters :date-time-no-ms)
                         later (.plusMinutes now 60)
+                        then (.minusMinutes now 1)
                         nows (.print fmt now)
+                        thens (.print fmt then)
                         laters (.print fmt later)]
                     (merge props {
                                   :authn-instant nows
                                   :issue-instant nows
-                                  :not-before nows
+                                  :not-before thens
                                   :not-on-or-after laters}))
       )
   ( [props] (add-saml-times props (t/now))))

@@ -20,7 +20,7 @@
           :id "some.uuid"
           :authn-instant "1970-01-01T00:00:00Z",
           :issue-instant "1970-01-01T00:00:00Z",
-          :not-before "1970-01-01T00:00:00Z",
+          :not-before "1969-12-31T23:59:00Z",
           :not-on-or-after "1970-01-01T01:00:00Z"})
 
 (fact "get-saml-assertion"
