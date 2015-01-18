@@ -38,8 +38,6 @@
                                org.clojure/java.classpath]]
                  [ring-server "0.3.1"
                   :exclusions [joda-time]]
-
-                 [tailrecursion/ring-proxy "2.0.0-SNAPSHOT"]
                  ]
 
   :ring {:handler clawss.handler/app,
