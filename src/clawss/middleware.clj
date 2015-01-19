@@ -25,13 +25,19 @@
                               (or (:subject-name req) "")
                               (or (:subject-name-type req) ""))))))
 
+
 (defn wrap-request-body-to-string
   "Transform request body from various kinds of XML (Document, SOAPMessage) into string."
   [client]
   (fn [req]
     (client
-     (assoc req :body (xml/->string (:body req))))))
-
+      (if-let [bod (:body req)]
+        (assoc req :body (xml/->string bod))
+        req
+        )
+      )
+    )
+  )
 (defn wrap-response-body-to-string
   "Transform response body from various kinds of XML (Document, SOAPMessage) into string."
   [client]
