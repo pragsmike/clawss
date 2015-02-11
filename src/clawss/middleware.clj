@@ -7,14 +7,22 @@
             [clj-stacktrace.repl :as strp]
             ))
 
+
 (defn wrap-verify-response
-  "Client (clj-http) middleware to verify and strip security headers."
+  "Client (clj-http) middleware to verify and strip security headers.
+   If the response code is not 200, returns the response unchanged.
+   If an error occurs, returns the response unchanged except that the
+   key :soap-exception will be set to the exception that occurred."
   [client]
   (fn [req]
     (let [resp (client req)]
-      (assoc resp :body
-             (xwss/verify-soap-response!
-              (:body resp))))))
+      (if (= 200 (:status resp))
+        (try (assoc resp :body
+                    (xwss/verify-soap-response!
+                     (:body resp)))
+             (catch Exception e
+               (assoc resp :soap-exception e) ))
+        resp))))
 
 (defn wrap-secure-request
   "Client (clj-http) middleware to add XML signature."
