@@ -1,6 +1,5 @@
 (ns clawss.test-utils
-  (:require [midje.sweet :refer :all]
-            [ring.adapter.jetty :refer [run-jetty]]
+  (:require [ring.adapter.jetty :refer [run-jetty]]
             [saacl.soap :as soap])
   )
 

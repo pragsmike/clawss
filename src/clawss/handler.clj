@@ -1,7 +1,7 @@
 (ns clawss.handler
   "Ring handler for the clawss proxy service."
   (:require [taoensso.timbre :as timbre]
-            [taoensso.timbre.appenders.rotor :as rotor]
+            [taoensso.timbre.appenders.3rd-party.rotor :as rotor]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
 
@@ -34,7 +34,7 @@
     :enabled?              true,
     :async?                false,
     :max-message-per-msecs nil,
-    :fn                    rotor/appender-fn})
+    })
   (timbre/set-config!
    [:shared-appender-config :rotor]
    {:path "clawss.log", :max-size (* 512 1024), :backlog 10})

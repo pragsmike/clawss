@@ -1,11 +1,10 @@
 (ns clawss.t-creds
-  (:require [midje.sweet :refer :all]
+  (:require [clojure.test :refer :all]
             [clawss.creds :as creds]))
 
-(facts "keystores"
-       (fact "get-keystore-registry"
-             (creds/get-keystore-registry) => associative?
-             )
-       (fact "keystore"
-             (type (creds/keystore)) =>  java.security.KeyStore )
-       )
+(testing "keystores"
+  (deftest test-get-keystore-registry
+    (is (associative? (creds/get-keystore-registry)))
+    )
+  (deftest test-keystore
+    (is (= java.security.KeyStore (type (creds/keystore))))))

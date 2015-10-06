@@ -20,7 +20,18 @@
          (let [cb (aget callbacks 0)]
            (when (= (type cb) com.sun.xml.wss.impl.callback.CertificateValidationCallback)
              (.setValidator cb (reify com.sun.xml.wss.impl.callback.CertificateValidationCallback$CertificateValidator
-                                 (^boolean validate [this ^java.security.cert.X509Certificate certificate]  true)
+                                 (^boolean validate [this ^java.security.cert.X509Certificate certificate]
+                                   true)
+                                 )))
+           (when (= (type cb) com.sun.xml.wss.impl.callback.TimestampValidationCallback)
+             (.setValidator cb (reify com.sun.xml.wss.impl.callback.TimestampValidationCallback$TimestampValidator
+                                 (^void validate [this ^com.sun.xml.wss.impl.callback.TimestampValidationCallback$Request request]
+                                   #_(prn {:created (.getCreated request)
+                                         :expired (.getExpired request)
+                                         :maxClockSkew (.getMaxClockSkew request)
+                                         :freshnessLimit (.getTimestampFreshnessLimit request)
+                                         })
+                                   true)
                                  )))
 
            (if (= (type cb) com.sun.xml.wss.impl.callback.SignatureKeyCallback)
@@ -39,10 +50,11 @@
 (defn verify-inbound-message
   "TODO: Test this with a SOAP Fault as input."
   [message]
-  (let [processor (processor)
-        message (soap/->soap message)
-        context (. processor createProcessingContext message)]
-    #_(. processor verifyInboundMessage context)
+  (let [soapm  (soap/->soap (soap/->soap (saacl.xml/->string message)))
+        processor (processor)
+        context (. processor createProcessingContext soapm)]
+    (. processor verifyInboundMessage context)
+    message
     )
   )
 
@@ -115,5 +127,5 @@
   Strips them and returns the message without the security markings, mutated in place."
   [soap-response]
   (->  soap-response
-       ;(verify-inbound-message)
+       (verify-inbound-message)
        (strip-security-header!)))
