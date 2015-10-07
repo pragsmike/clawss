@@ -1,4 +1,4 @@
-(defproject clawss "0.1.6-SNAPSHOT"
+(defproject clawss "0.1.6"
   :description "clawss: clojure wrapper for web-service security"
   :url "https://bitbucket.org/pragsmike/clawss.git"
   :license {:name "Eclipse Public License"
@@ -15,7 +15,7 @@
                                javax.xml.crypto/xmldsig]]
                  [xerces/xercesImpl "2.9.1"]
 
-                 [saacl "0.1.4"]
+                 [saacl "0.1.5"]
                  [liberator "0.13"]
                  [compojure "1.4.0"]
                  [selmer "0.9.2" :exclusions [ commons-codec]]
