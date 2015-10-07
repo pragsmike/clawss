@@ -28,16 +28,6 @@
    an app server such as Tomcat
    put any initialization code here"
   []
-  (timbre/set-config!
-   [:appenders :rotor]
-   {:min-level             :debug,
-    :enabled?              true,
-    :async?                false,
-    :max-message-per-msecs nil,
-    })
-  (timbre/set-config!
-   [:shared-appender-config :rotor]
-   {:path "clawss.log", :max-size (* 512 1024), :backlog 10})
 
   (info "clawss proxy started successfully"))
 
