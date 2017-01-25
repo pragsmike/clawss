@@ -39,6 +39,8 @@
                    alias (.getAlias req)
                    keystore (creds/keystore)
                    key-pass (:keystore-pass (creds/get-keystore-registry))]
+               (if-not key-pass
+                 (throw (ex-info ":keystore-pass not specified" {})))
                (.setPrivateKey req (.getKey keystore alias (char-array key-pass)))
                (.setX509Certificate req (.getCertificate keystore alias)))))))))
 
