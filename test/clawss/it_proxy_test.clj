@@ -1,4 +1,4 @@
-(ns clawss.t-it-proxy
+(ns clawss.it-proxy-test
   "Integration test using a proxy running in jetty."
   (:require
    [clawss.test-utils :as tu]

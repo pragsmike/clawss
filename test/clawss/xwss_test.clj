@@ -1,4 +1,4 @@
-(ns clawss.t-xwss
+(ns clawss.xwss-test
   (:require [clojure.java.io :as io]
             [clojure.test :refer :all]
             [clj-xpath.core :as xp]
@@ -71,16 +71,6 @@
 
     (let [verified (xwss/verify-inbound-message withsec)]
       (is verified))))
-
-(deftest test-verify-inbound-message-bad-1
-  (let [withsec (soap/->soap (io/resource "bad-signature-1.xml"))]
-    (is (has-header-element? withsec soap/NS-ADDRESSING "MessageID"))
-    (is (has-header-element? withsec xwss/NS-WSS-SECEXT "Security"))
-    (is (has-header-element? withsec xwss/NS-XMLDSIG "Signature"))
-    (is (has-header-element? withsec xwss/NS-WSS-UTILITY "Timestamp"))
-
-    (is (thrown? com.sun.xml.wss.XWSSecurityException (xwss/verify-inbound-message withsec)))))
-
 
 (deftest test-secure-soap-request!
   (let [nosec (soap/->soap (io/resource "sample-request.xml"))

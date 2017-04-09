@@ -1,4 +1,4 @@
-(ns clawss.t-creds
+(ns clawss.creds-test
   (:require [clojure.test :refer :all]
             [clawss.creds :as creds]))
 

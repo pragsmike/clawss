@@ -1,4 +1,4 @@
-(ns clawss.t-saml
+(ns clawss.saml-test
   (:require [clojure.test :refer :all]
             [clj-time.core :as t]
             [clj-xpath.core :as xp]
