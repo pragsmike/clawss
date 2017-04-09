@@ -1,4 +1,4 @@
-(defproject clawss "0.1.8-SNAPSHOT"
+(defproject clawss "0.1.8"
   :description "clawss: clojure wrapper for web-service security"
   :url "https://github.com/pragsmike/clawss.git"
   :license {:name "Eclipse Public License"
